@@ -10,6 +10,7 @@ sup=10
 precision=3
 npoblacion=4
 pcruza=0.5
+pmuta=0.5
 
 l=int(math.log2(((sup-inf)*(10**precision))+0.9))
 
@@ -102,6 +103,26 @@ def cruza(pad):
 
     return shijos
 
+def muta(hi):
+    for i in range(npoblacion):
+        p=flip(pmuta)
+        if p==1:
+            r1=random.randint(1,l)
+            r2=random.randint(1,l)
+            ra=[r1,r2]
+            ra.sort()
+            cad=hi[i][0]
+            cha=cad[ra[0]:ra[1]]
+            chaflip=np.flip(cha)
+            cad[ra[0]:ra[1]]=chaflip
+            hi[i][0]=cad
+            hi[i][1]=evalua(cad)
+
+        else:
+            hi[i][1]=evalua(hi[i][0])
+
+    return hi
+
 poblacion=[[i for i in range(4)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
 for individuo in range(npoblacion):
     poblacion[individuo][0]=crea()
@@ -113,4 +134,7 @@ padres=seleccionpadres(poblacion)
 print(padres)
 
 hijos=cruza(padres)
+print(hijos)
+
+hijos=muta(hijos)
 print(hijos)
