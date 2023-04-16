@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import random
+from random import shuffle
 
 d=10
 inf=-10
@@ -8,9 +9,11 @@ sup=10
 #inf=-5.12
 #sup=5.12
 precision=3
-npoblacion=4
-pcruza=0.5
-pmuta=0.5
+npoblacion=100
+pcruza=0.9
+pmuta=0.9
+neval=0
+evaluaciones=50000
 
 l=int(math.log2(((sup-inf)*(10**precision))+0.9))
 
@@ -29,17 +32,19 @@ def crea():
     return poblacion
 
 def evalua(chain):
+    global neval
+    neval+=1
     separada=np.reshape(chain,(d,l))
     ev=0
     for sub in range(d):
         cad=separada[sub]
+        cadf=np.flip(cad)
         valor=0
         for ind in range(l):
-            valor=valor+cad[ind]*(2**(l-1-ind))
-        xreal=inf+((valor+(sup-inf))/((2**l)-1))
+            valor=round(valor+(cadf[ind]*(2**(ind))),precision)
+        xreal=round(inf+((valor*(sup-inf))/((2**l)-1)),precision)
         ev=ev+(xreal**2)
-
-    return(ev)
+    return(round(ev,precision))
 
 def seleccionpadres(pob):
     menor=math.inf
@@ -54,10 +59,10 @@ def seleccionpadres(pob):
         pob[q][2]=pob[q][1]+menor
         sumatoria+=pob[q][2]
     
-    mu=sumatoria/npoblacion
+    mu=round((sumatoria/npoblacion),precision)
 
     for r in range(npoblacion):
-        pob[r][3]=pob[r][2]/mu
+        pob[r][3]=round(pob[r][2]/mu,precision)
 
     padres=[] #crea matriz de largo de la poblacion
     ptr=random.random()
@@ -75,7 +80,7 @@ def seleccionpadres(pob):
 
 def cruza(pad):
     shijos=[[k for k in range(4)]for l in range(npoblacion)] #crea una matriz de largo de los hijos
-    for par in range(0,len(pad)-1,2):
+    for par in range(0,npoblacion-1,2):
         p1=pad[par][0]
         p2=pad[par+1][0]
 
@@ -128,13 +133,26 @@ for individuo in range(npoblacion):
     poblacion[individuo][0]=crea()
     poblacion[individuo][1]=evalua(poblacion[individuo][0])
 
-print(poblacion)
+while neval<evaluaciones:
+    padres=seleccionpadres(poblacion)
 
-padres=seleccionpadres(poblacion)
-print(padres)
+    hijos=cruza(padres)
 
-hijos=cruza(padres)
-print(hijos)
+    hijos=muta(hijos)
 
-hijos=muta(hijos)
-print(hijos)
+    poblacion.sort(key=lambda x:x[2]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
+    hijos.sort(key=lambda x:x[1])
+
+    hijos[-1][0]=poblacion[-1][0]
+    hijos[-1][1]=-poblacion[-1][1]
+    hijos.sort(key=lambda x:x[1])
+    #print("Mejor solucion actual:")
+    #print(hijos[0][0])
+    print("Mejor valor actual:")
+    print(hijos[0][1])
+
+    poblacion=hijos
+    shuffle(poblacion)
+
+print("Mejor solucion actual:")
+print(hijos[0][0])
