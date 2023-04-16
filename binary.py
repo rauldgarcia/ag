@@ -26,9 +26,22 @@ def crea():
             poblacion[bit]=1
     return poblacion
 
+def evalua(chain):
+    separada=np.reshape(chain,(d,l))
+    ev=0
+    for sub in range(d):
+        cad=separada[sub]
+        valor=0
+        for ind in range(l):
+            valor=valor+cad[ind]*(2**(l-1-ind))
+        xreal=inf+((valor+(sup-inf))/((2**l)-1))
+        ev=ev+(xreal**2)
+
+    return(ev)
+
 poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
 for individuo in range(npoblacion):
     poblacion[individuo][0]=crea()
-    #agregar aqui llamada a evaluacion
+    poblacion[individuo][1]=evalua(poblacion[individuo][0])
 
 print(poblacion)
