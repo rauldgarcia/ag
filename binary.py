@@ -8,7 +8,7 @@ sup=10
 #inf=-5.12
 #sup=5.12
 precision=3
-npoblacion=2
+npoblacion=4
 
 l=int(math.log2(((sup-inf)*(10**precision))+0.9))
 
@@ -39,9 +39,45 @@ def evalua(chain):
 
     return(ev)
 
-poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+def seleccionpadres(pob):
+    menor=math.inf
+    for p in range(npoblacion):
+        pob[p][1]=pob[p][1]*-1
+        if pob[p][1]<menor:
+            menor=pob[p][1]
+    
+    menor=abs(menor)*2
+    sumatoria=0
+    for q in range(npoblacion):
+        pob[q][2]=pob[q][1]+menor
+        sumatoria+=pob[q][2]
+    
+    mu=sumatoria/npoblacion
+
+    for r in range(npoblacion):
+        pob[r][3]=pob[r][2]/mu
+
+    padres=[] #crea matriz de largo de la poblacion
+    ptr=random.random()
+    sum=0
+    for i in range(npoblacion-1):
+        sum+=pob[i][3]
+        f=True
+        while f!=False:
+            padres.append(pob[i])
+            ptr+=1
+            if sum<=ptr:
+                f=False
+
+    return(padres)
+
+poblacion=[[i for i in range(4)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+print(poblacion)
 for individuo in range(npoblacion):
     poblacion[individuo][0]=crea()
     poblacion[individuo][1]=evalua(poblacion[individuo][0])
 
 print(poblacion)
+
+padres=seleccionpadres(poblacion)
+print(padres)
