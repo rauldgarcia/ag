@@ -6,6 +6,7 @@ from random import shuffle
 d=10
 problema=0
 precision=3
+neval=0
 
 while problema!=1 and problema!=2:
     problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))
@@ -21,7 +22,6 @@ if problema==2:
 npoblacion=100
 pcruza=0.9
 pmuta=0.9
-neval=0
 evaluaciones=50000
 
 l=int(math.log2(((sup-inf)*(10**precision))+0.9))
@@ -160,10 +160,16 @@ def imprime(chain):
 
     return imp
 
+best=float('inf')
 poblacion=[[i for i in range(4)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
 for individuo in range(npoblacion):
     poblacion[individuo][0]=crea()
     poblacion[individuo][1]=evalua(poblacion[individuo][0])
+    besta=poblacion[individuo][1]
+    if besta<best:
+        best=besta
+
+vectorevaluaciones=np.array([[neval,best]])
 
 while neval<evaluaciones:
     padres=seleccionpadres(poblacion)
@@ -183,6 +189,9 @@ while neval<evaluaciones:
     print("Mejor valor actual:")
     print(hijos[0][1])
 
+    vectorevaluacionesac=np.array([[neval,hijos[0][1]]])
+    vectorevaluaciones=np.append(vectorevaluaciones,vectorevaluacionesac,axis=0)
+
     poblacion=hijos
     shuffle(poblacion)
 
@@ -190,3 +199,5 @@ while neval<evaluaciones:
 #print(hijos[0][0])
 print("La mejor solucion es:")
 print(imprime(hijos[0][0]))
+print(vectorevaluaciones)
+np.savetxt("prueba.csv",vectorevaluaciones,delimiter=",")
