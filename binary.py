@@ -4,10 +4,12 @@ import random
 from random import shuffle
 
 d=10
-inf=-10
-sup=10
-#inf=-5.12
-#sup=5.12
+
+
+#inf=-10
+#sup=10
+inf=-5.12
+sup=5.12
 precision=3
 npoblacion=100
 pcruza=0.9
@@ -43,7 +45,11 @@ def evalua(chain):
         for ind in range(l):
             valor=round(valor+(cadf[ind]*(2**(ind))),precision)
         xreal=round(inf+((valor*(sup-inf))/((2**l)-1)),precision)
-        ev=ev+(xreal**2)
+        #ev=ev+(xreal**2)
+        ev=round(ev+((xreal**2-(10*math.cos(2*math.pi*xreal)))),precision)
+
+    ev+=round(10*d,precision)
+
     return(round(ev,precision))
 
 def seleccionpadres(pob):
@@ -128,6 +134,21 @@ def muta(hi):
 
     return hi
 
+def imprime(chain):
+    separada=np.reshape(chain,(d,l))
+    imp=[]
+    for sub in range(d):
+        cad=separada[sub]
+        cadf=np.flip(cad)
+        valor=0
+        for ind in range(l):
+            valor=round(valor+(cadf[ind]*(2**(ind))),precision)
+        xreal=round(inf+((valor*(sup-inf))/((2**l)-1)),precision)
+        
+        imp.append(xreal)
+
+    return imp
+
 poblacion=[[i for i in range(4)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
 for individuo in range(npoblacion):
     poblacion[individuo][0]=crea()
@@ -154,5 +175,7 @@ while neval<evaluaciones:
     poblacion=hijos
     shuffle(poblacion)
 
-print("Mejor solucion actual:")
-print(hijos[0][0])
+#print("Mejor solucion actual:")
+#print(hijos[0][0])
+print("La mejor solucion es:")
+print(imprime(hijos[0][0]))
