@@ -4,13 +4,20 @@ import random
 from random import shuffle
 
 d=10
-
-
-#inf=-10
-#sup=10
-inf=-5.12
-sup=5.12
+problema=0
 precision=3
+
+while problema!=1 and problema!=2:
+    problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))
+
+if problema==1:
+    inf=-10
+    sup=10
+
+if problema==2:
+    inf=-5.12
+    sup=5.12
+
 npoblacion=100
 pcruza=0.9
 pmuta=0.9
@@ -45,10 +52,15 @@ def evalua(chain):
         for ind in range(l):
             valor=round(valor+(cadf[ind]*(2**(ind))),precision)
         xreal=round(inf+((valor*(sup-inf))/((2**l)-1)),precision)
-        #ev=ev+(xreal**2)
-        ev=round(ev+((xreal**2-(10*math.cos(2*math.pi*xreal)))),precision)
+        
+        if problema==1:
+            ev=ev+(xreal**2)
 
-    ev+=round(10*d,precision)
+        if problema==2:    
+            ev=round(ev+((xreal**2-(10*math.cos(2*math.pi*xreal)))),precision)
+
+    if problema==2:
+        ev+=round(10*d,precision)
 
     return(round(ev,precision))
 
@@ -144,7 +156,6 @@ def imprime(chain):
         for ind in range(l):
             valor=round(valor+(cadf[ind]*(2**(ind))),precision)
         xreal=round(inf+((valor*(sup-inf))/((2**l)-1)),precision)
-        
         imp.append(xreal)
 
     return imp
