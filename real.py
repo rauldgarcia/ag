@@ -6,14 +6,20 @@ from random import shuffle
 
 eta=2
 d=10
-problema=1
+problema=0
 precision=3
 neval=0
-inf=-10
-sup=10
 
-#inf=-5.12
-#sup=5.12
+while problema!=1 and problema!=2:
+    problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))
+
+if problema==1:
+    inf=-10
+    sup=10
+
+if problema==2:
+    inf=-5.12
+    sup=5.12
 
 #npoblacion=int(input('Ingrese el tamaño de la población:'))
 npoblacion=100
@@ -34,7 +40,13 @@ def flip(p):
 def crea():
     poblacion=np.zeros((d))
     for bit in range(d):
-        poblacion[bit]=round(random.randrange(inf,sup)+random.random(),precision)
+        poblacion[bit]=round(random.randint(inf,sup)+random.random(),precision)
+    return poblacion
+
+def crea2():
+    poblacion=np.zeros((d))
+    for bit in range(d):
+        poblacion[bit]=round(random.uniform(inf,sup),precision)
     return poblacion
 
 def evalua(chain):
@@ -45,7 +57,7 @@ def evalua(chain):
         valor=0
         
         if problema==1:
-            ev=ev+(chain[sub]**2)
+            ev=round(ev+(chain[sub]**2),precision)
 
         if problema==2:    
             ev=round(ev+((chain[sub]**2-(10*math.cos(2*math.pi*chain[sub])))),precision)
@@ -122,7 +134,7 @@ def muta(hijos):
         if p==1:
             cadena=hijos[individuo][0]
             ran=random.randrange(0,d)
-            cadena[ran]=random.randrange(inf,sup)
+            cadena[ran]=round(random.uniform(inf,sup),precision)
             hijos[individuo][0]=cadena
             hijos[individuo][1]=evalua(hijos[individuo][0])
         
@@ -133,12 +145,22 @@ def muta(hijos):
 
 best=float('inf')
 poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
-for individuo in range(npoblacion):
-    poblacion[individuo][0]=crea()
-    poblacion[individuo][1]=evalua(poblacion[individuo][0])
-    besta=poblacion[individuo][1]
-    if besta<best:
-        best=besta
+
+if problema==1:
+    for individuo in range(npoblacion):
+        poblacion[individuo][0]=crea()
+        poblacion[individuo][1]=evalua(poblacion[individuo][0])
+        besta=poblacion[individuo][1]
+        if besta<best:
+            best=besta
+
+else:
+    for individuo in range(npoblacion):
+        poblacion[individuo][0]=crea2()
+        poblacion[individuo][1]=evalua(poblacion[individuo][0])
+        besta=poblacion[individuo][1]
+        if besta<best:
+            best=besta
 
 vectorevaluaciones=np.array([[neval,best]])
 
