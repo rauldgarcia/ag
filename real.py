@@ -2,6 +2,7 @@ import numpy as np
 import math
 import random
 import copy
+from random import shuffle
 
 eta=2
 d=10
@@ -15,11 +16,11 @@ sup=10
 #sup=5.12
 
 #npoblacion=int(input('Ingrese el tamaño de la población:'))
-npoblacion=20
+npoblacion=100
 #pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
 pcruza=0.9
 #pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
-pmuta=0.9
+pmuta=0.95
 #evaluaciones=int(input('Ingrese el número de evaluaciones:'))
 evaluaciones=50000
 
@@ -114,19 +115,6 @@ def cruza(pad):
 
     return shijos
 
-poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
-for individuo in range(npoblacion):
-    poblacion[individuo][0]=crea()
-    poblacion[individuo][1]=evalua(poblacion[individuo][0])
-
-print(poblacion)
-
-padres=seleccionpadres(poblacion)
-print(padres)
-
-hijos=cruza(padres)
-print(hijos)
-
 def muta(hijos):
     for individuo in range(npoblacion):
         p=flip(pmuta) #volado si se muta o no
@@ -138,7 +126,48 @@ def muta(hijos):
             hijos[individuo][0]=cadena
             hijos[individuo][1]=evalua(hijos[individuo][0])
         
+        else:
+            hijos[individuo][1]=evalua(hijos[individuo][0])
+    
     return hijos
 
-hijos=muta(hijos)
-print(hijos)
+best=float('inf')
+poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+for individuo in range(npoblacion):
+    poblacion[individuo][0]=crea()
+    poblacion[individuo][1]=evalua(poblacion[individuo][0])
+    besta=poblacion[individuo][1]
+    if besta<best:
+        best=besta
+
+vectorevaluaciones=np.array([[neval,best]])
+
+while neval<evaluaciones:
+
+    padres=seleccionpadres(poblacion)
+
+    hijos=cruza(padres)
+
+    hijos=muta(hijos)
+
+
+    poblacion.sort(key=lambda x:x[1])
+    hijos.sort(key=lambda x:x[1])
+    hijos[-1][0]=poblacion[0][0]
+    hijos[-1][1]=poblacion[0][1]
+    hijos.sort(key=lambda x:x[1])
+    #print("Mejor solucion actual:")
+    #print(hijos[0][0])
+    print("Mejor valor actual:")
+    print(hijos[0][1])
+    vectorevaluacionesac=np.array([[neval,hijos[0][1]]])
+    vectorevaluaciones=np.append(vectorevaluaciones,vectorevaluacionesac,axis=0)
+    poblacion=hijos
+    shuffle(poblacion)
+
+#print("Mejor solucion actual:")
+#print(hijos[0][0])
+print("La mejor solucion es:")
+print(hijos[0][0])
+#print(vectorevaluaciones)
+np.savetxt("prueba.csv",vectorevaluaciones,delimiter=",")
