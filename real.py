@@ -126,3 +126,19 @@ print(padres)
 
 hijos=cruza(padres)
 print(hijos)
+
+def muta(hijos):
+    for individuo in range(npoblacion):
+        p=flip(pmuta) #volado si se muta o no
+        
+        if p==1:
+            cadena=hijos[individuo][0]
+            ran=random.randrange(0,d)
+            cadena[ran]=random.randrange(inf,sup)
+            hijos[individuo][0]=cadena
+            hijos[individuo][1]=evalua(hijos[individuo][0])
+        
+    return hijos
+
+hijos=muta(hijos)
+print(hijos)
