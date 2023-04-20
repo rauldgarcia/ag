@@ -8,8 +8,10 @@ problema=0
 precision=3
 neval=0
 
-while problema!=1 and problema!=2:
-    problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))
+
+'''while problema!=1 and problema!=2:
+    problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))'''
+problema=1
 
 if problema==1:
     inf=-10
@@ -19,16 +21,20 @@ if problema==2:
     inf=-5.12
     sup=5.12
 
-npoblacion=int(input('Ingrese el tamaño de la población:'))
-#npoblacion=100
-pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-#pcruza=0.9
-pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
-#pmuta=0.9
-evaluaciones=int(input('Ingrese el número de evaluaciones:'))
-#evaluaciones=50000
 
 l=int(math.log2(((sup-inf)*(10**precision))+0.9))
+
+#npoblacion=int(input('Ingrese el tamaño de la población:'))
+npoblacion=200
+#pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
+pcruza=1
+#pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
+pmuta=0.1
+#evaluaciones=int(input('Ingrese el número de evaluaciones:'))
+generaciones=600
+evaluaciones=npoblacion*generaciones
+
+
 
 def flip(p):
     n=random.random()
@@ -64,7 +70,7 @@ def evalua(chain):
             ev=round(ev+((xreal**2-(10*math.cos(2*math.pi*xreal)))),precision)
 
     if problema==2:
-        ev+=round(10*d,precision)
+        ev=round((10*d)+ev,precision)
 
     return(round(ev,precision))
 
@@ -203,5 +209,5 @@ while neval<evaluaciones:
 #print(hijos[0][0])
 print("La mejor solucion es:")
 print(imprime(hijos[0][0]))
-print(vectorevaluaciones)
+#print(vectorevaluaciones)
 np.savetxt("prueba.csv",vectorevaluaciones,delimiter=",")
