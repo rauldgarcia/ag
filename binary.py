@@ -11,7 +11,7 @@ neval=0
 
 '''while problema!=1 and problema!=2:
     problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))'''
-problema=1
+problema=2
 
 if problema==1:
     inf=-10
@@ -25,9 +25,9 @@ if problema==2:
 l=int(math.log2(((sup-inf)*(10**precision))+0.9))
 
 #npoblacion=int(input('Ingrese el tamaño de la población:'))
-npoblacion=200
+npoblacion=100
 #pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-pcruza=1
+pcruza=0.85
 #pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
 pmuta=0.1
 #evaluaciones=int(input('Ingrese el número de evaluaciones:'))
