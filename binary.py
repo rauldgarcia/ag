@@ -22,23 +22,21 @@ if problema==2:
     sup=5.12
 
 
-l=int(math.log2(((sup-inf)*(10**precision))+0.9))
+l=int(math.log2(((sup-inf)*(10**precision)))+0.9)
 
 #npoblacion=int(input('Ingrese el tamaño de la población:'))
 npoblacion=100
 #pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-pcruza=0.85
+pcruza=0.75
 #pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
-pmuta=0.1
+pmuta=0.01
 #evaluaciones=int(input('Ingrese el número de evaluaciones:'))
 generaciones=600
 evaluaciones=npoblacion*generaciones
 
-
-
 def flip(p):
     n=random.random()
-    if n<p:
+    if n<=p:
         return 1
     else:
         return 0
@@ -46,8 +44,7 @@ def flip(p):
 def crea():
     poblacion=np.zeros((l*d))
     for bit in range(len(poblacion)):
-        if flip(0.5)==1:
-            poblacion[bit]=1
+           poblacion[bit]=flip(0.5)
     return poblacion
 
 def evalua(chain):
@@ -74,7 +71,7 @@ def evalua(chain):
 
     return(round(ev,precision))
 
-def seleccionpadres(pob):
+def seleccionpadres(pob): #universal estocastica
     menor=math.inf
     for p in range(npoblacion):
         pob[p][1]=pob[p][1]*-1
@@ -106,7 +103,7 @@ def seleccionpadres(pob):
 
     return(padres)
 
-def cruza(pad):
+def cruza(pad): #cruza uniforme
     shijos=[[k for k in range(4)]for l in range(npoblacion)] #crea una matriz de largo de los hijos
     for par in range(0,npoblacion-1,2):
         p1=pad[par][0]
@@ -136,12 +133,12 @@ def cruza(pad):
 
     return shijos
 
-def muta(hi):
+def muta(hi): #mutacion por reordenamiento
     for i in range(npoblacion):
         p=flip(pmuta)
         if p==1:
-            r1=random.randint(1,l)
-            r2=random.randint(1,l)
+            r1=random.randint(0,l*d)
+            r2=random.randint(0,l*d)
             ra=[r1,r2]
             ra.sort()
             cad=hi[i][0]
