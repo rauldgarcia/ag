@@ -6,7 +6,7 @@ from random import shuffle
 
 eta=2
 d=10
-problema=1
+problema=2
 precision=3
 neval=0
 
@@ -24,11 +24,11 @@ if problema==2:
 #npoblacion=int(input('Ingrese el tamaño de la población:'))
 npoblacion=100
 #pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-pcruza=0.85
+pcruza=0.7
 #pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
-pmuta=0.1
+pmuta=0.01
 #evaluaciones=int(input('Ingrese el número de evaluaciones:'))
-generaciones=600
+generaciones=1500
 evaluaciones=npoblacion*generaciones
 
 def flip(p):
@@ -61,7 +61,7 @@ def evalua(chain):
             ev=round(ev+(chain[sub]**2),precision)
 
         if problema==2:    
-            ev=round(ev+((chain[sub]**2-(10*math.cos(2*math.pi*chain[sub])))),precision)
+            ev=round(ev+(((chain[sub]**2)-(10*math.cos(2*math.pi*chain[sub])))),precision)
 
     if problema==2:
         ev+=round(10*d,precision)
