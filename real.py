@@ -68,7 +68,7 @@ def evalua(chain):
 
     return(round(ev,precision))
 
-def seleccionpadres(pob): 
+def seleccionpadres(pob): #torneo binario deterministico
     padres=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
     
     for i in range(npoblacion):
@@ -89,7 +89,7 @@ def seleccionpadres(pob):
     
     return padres
 
-def cruza(pad):
+def cruza(pad): #SBX
     shijos=[[k for k in range(2)]for l in range(npoblacion)] #crea una matriz de largo de los hijos
     for par in range(0,npoblacion-1,2):
         p1=pad[par][0]
@@ -128,7 +128,7 @@ def cruza(pad):
 
     return shijos
 
-def muta(hijos):
+def muta(hijos): #Mutacion uniforme
     for individuo in range(npoblacion):
         p=flip(pmuta) #volado si se muta o no
         
@@ -172,7 +172,6 @@ while neval<evaluaciones:
     hijos=cruza(padres)
 
     hijos=muta(hijos)
-
 
     poblacion.sort(key=lambda x:x[1])
     hijos.sort(key=lambda x:x[1])
