@@ -6,12 +6,12 @@ from random import shuffle
 
 eta=2
 d=10
-problema=0
+problema=2
 precision=3
-neval=0
 
-while problema!=1 and problema!=2:
-    problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))
+
+'''while problema!=1 and problema!=2:
+    problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))'''
 
 if problema==1:
     inf=-10
@@ -21,14 +21,14 @@ if problema==2:
     inf=-5.12
     sup=5.12
 
-npoblacion=int(input('Ingrese el tamaño de la población:'))
-#npoblacion=100
-pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-#pcruza=0.7
-pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
-#pmuta=0.01
-generaciones=int(input('Ingrese el número de generaciones:'))
-#generaciones=1500
+#npoblacion=int(input('Ingrese el tamaño de la población:'))
+npoblacion=100
+#pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
+pcruza=0.7
+#pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
+pmuta=0.01
+#evaluaciones=int(input('Ingrese el número de evaluaciones:'))
+generaciones=1500
 evaluaciones=npoblacion*generaciones
 
 def flip(p):
@@ -144,52 +144,63 @@ def muta(hijos): #Mutacion uniforme
     
     return hijos
 
-best=float('inf')
-poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+excel=np.zeros((1,11))
+for corrida in range(1,31,1):
 
-if problema==1:
-    for individuo in range(npoblacion):
-        poblacion[individuo][0]=crea()
-        poblacion[individuo][1]=evalua(poblacion[individuo][0])
-        besta=poblacion[individuo][1]
-        if besta<best:
-            best=besta
+    neval=0
 
-else:
-    for individuo in range(npoblacion):
-        poblacion[individuo][0]=crea2()
-        poblacion[individuo][1]=evalua(poblacion[individuo][0])
-        besta=poblacion[individuo][1]
-        if besta<best:
-            best=besta
+    best=float('inf')
+    poblacion=[[i for i in range(2)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
 
-vectorevaluaciones=np.array([[neval,best]])
+    if problema==1:
+        for individuo in range(npoblacion):
+            poblacion[individuo][0]=crea()
+            poblacion[individuo][1]=evalua(poblacion[individuo][0])
+            besta=poblacion[individuo][1]
+            if besta<best:
+                best=besta
 
-while neval<evaluaciones:
+    else:
+        for individuo in range(npoblacion):
+            poblacion[individuo][0]=crea2()
+            poblacion[individuo][1]=evalua(poblacion[individuo][0])
+            besta=poblacion[individuo][1]
+            if besta<best:
+                best=besta
 
-    padres=seleccionpadres(poblacion)
+    vectorevaluaciones=np.array([[neval,best]])
 
-    hijos=cruza(padres)
+    while neval<evaluaciones:
 
-    hijos=muta(hijos)
+        padres=seleccionpadres(poblacion)
 
-    poblacion.sort(key=lambda x:x[1])
-    hijos.sort(key=lambda x:x[1])
-    hijos[-1][0]=poblacion[0][0]
-    hijos[-1][1]=poblacion[0][1]
-    hijos.sort(key=lambda x:x[1])
+        hijos=cruza(padres)
+
+        hijos=muta(hijos)
+
+        poblacion.sort(key=lambda x:x[1])
+        hijos.sort(key=lambda x:x[1])
+        hijos[-1][0]=poblacion[0][0]
+        hijos[-1][1]=poblacion[0][1]
+        hijos.sort(key=lambda x:x[1])
+        #print("Mejor solucion actual:")
+        #print(hijos[0][0])
+        #print("Mejor valor actual:")
+        #print(hijos[0][1])
+        vectorevaluacionesac=np.array([[neval,hijos[0][1]]])
+        vectorevaluaciones=np.append(vectorevaluaciones,vectorevaluacionesac,axis=0)
+        poblacion=hijos
+        shuffle(poblacion)
+
     #print("Mejor solucion actual:")
     #print(hijos[0][0])
-    print("Mejor valor actual:")
-    print(hijos[0][1])
-    vectorevaluacionesac=np.array([[neval,hijos[0][1]]])
-    vectorevaluaciones=np.append(vectorevaluaciones,vectorevaluacionesac,axis=0)
-    poblacion=hijos
-    shuffle(poblacion)
+    print("La mejor solucion es:")
+    print(hijos[0][0])
+    pexcel=np.append(hijos[0][0],hijos[0][1])
+    pexcel=np.reshape(pexcel, (1,11))
+    excel=np.append(excel,pexcel,axis=0)
+    #print(vectorevaluaciones)
+    name=str(problema)+'Real'+str(corrida)+'.csv'
+    np.savetxt(name,vectorevaluaciones,delimiter=",")
 
-#print("Mejor solucion actual:")
-#print(hijos[0][0])
-print("La mejor solucion es:")
-print(hijos[0][0])
-#print(vectorevaluaciones)
-np.savetxt("prueba.csv",vectorevaluaciones,delimiter=",")
+np.savetxt('Real 2.csv',excel,delimiter=",")

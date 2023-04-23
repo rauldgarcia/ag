@@ -5,14 +5,11 @@ from random import shuffle
 import copy
 
 d=10
-problema=0
 precision=3
-neval=0
 
-
-while problema!=1 and problema!=2:
-    problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))
-#problema=1
+'''while problema!=1 and problema!=2:
+    problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))'''
+problema=2
 
 if problema==1:
     inf=-10
@@ -22,17 +19,16 @@ if problema==2:
     inf=-5.12
     sup=5.12
 
-
 l=int(math.log2(((sup-inf)*(10**precision)))+0.9)
 
-npoblacion=int(input('Ingrese el tamaño de la población:'))
-#npoblacion=100
-pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-#pcruza=0.7
-pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
-#pmuta=0.01
-generaciones=int(input('Ingrese el número de generaciones:'))
-#generaciones=1500
+#npoblacion=int(input('Ingrese el tamaño de la población:'))
+npoblacion=100
+#pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
+pcruza=0.7
+#pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
+pmuta=0.01
+#evaluaciones=int(input('Ingrese el número de evaluaciones:'))
+generaciones=1500
 evaluaciones=npoblacion*generaciones
 
 def flip(p):
@@ -168,50 +164,62 @@ def imprime(chain):
 
     return imp
 
-best=float('inf')
-poblacion=[[i for i in range(4)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
-for individuo in range(npoblacion):
-    poblacion[individuo][0]=crea()
-    poblacion[individuo][1]=evalua(poblacion[individuo][0])
-    besta=poblacion[individuo][1]
-    if besta<best:
-        best=besta
+excel=np.zeros((1,11))
+for corrida in range(1,31,1):
+    
+    neval=0
 
-vectorevaluaciones=np.array([[neval,best]])
+    best=float('inf')
+    poblacion=[[i for i in range(4)]for j in range(npoblacion)] #crea matriz de largo de la poblacion
+    for individuo in range(npoblacion):
+        poblacion[individuo][0]=crea()
+        poblacion[individuo][1]=evalua(poblacion[individuo][0])
+        besta=poblacion[individuo][1]
+        if besta<best:
+            best=besta
 
-while neval<evaluaciones:
-    copia=copy.deepcopy(poblacion)
-    padres=seleccionpadres(poblacion)
+    vectorevaluaciones=np.array([[neval,best]])
 
-    hijos=cruza(padres)
+    while neval<evaluaciones:
+        copia=copy.deepcopy(poblacion)
+        padres=seleccionpadres(poblacion)
 
-    hijos=muta(hijos)
+        hijos=cruza(padres)
 
-    copia.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
-    hijos.sort(key=lambda x:x[1])
+        hijos=muta(hijos)
 
-    #print(poblacion)
-    #print(hijos)
+        copia.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
+        hijos.sort(key=lambda x:x[1])
 
-    hijos[-1][0]=copia[0][0]
-    hijos[-1][1]=copia[0][1]
-    hijos.sort(key=lambda x:x[1])
-    mejors=copy.deepcopy(hijos[0][0])
-    mejorv=copy.deepcopy(hijos[0][1])
-    #print("Mejor solucion actual:")
-    #print(hijos[0][0])
-    print("Mejor valor actual:")
+        #print(poblacion)
+        #print(hijos)
+
+        hijos[-1][0]=copia[0][0]
+        hijos[-1][1]=copia[0][1]
+        hijos.sort(key=lambda x:x[1])
+        mejors=copy.deepcopy(hijos[0][0])
+        mejorv=copy.deepcopy(hijos[0][1])
+        #print("Mejor solucion actual:")
+        #print(hijos[0][0])
+        #print("Mejor valor actual:")
+        #print(mejorv)
+
+        vectorevaluacionesac=np.array([[neval,hijos[0][1]]])
+        vectorevaluaciones=np.append(vectorevaluaciones,vectorevaluacionesac,axis=0)
+
+        poblacion=hijos
+        shuffle(poblacion)
+
+    print("Mejor valor:")
     print(mejorv)
+    print("La mejor solucion es:")
+    print((imprime(mejors)))
+    lista=(imprime(mejors))
+    lista.append(mejorv)
+    pexcel=np.array(lista)
+    pexcel=np.reshape(pexcel, (1,11))
+    excel=np.append(excel,pexcel,axis=0)
+    name=str(problema)+'Binario'+str(corrida)+'.csv'
+    np.savetxt(name,vectorevaluaciones,delimiter=",")
 
-    vectorevaluacionesac=np.array([[neval,hijos[0][1]]])
-    vectorevaluaciones=np.append(vectorevaluaciones,vectorevaluacionesac,axis=0)
-
-    poblacion=hijos
-    shuffle(poblacion)
-
-print("Mejor valor:")
-print(mejorv)
-print("La mejor solucion es:")
-print(imprime(mejors))
-#print(vectorevaluaciones)
-np.savetxt('corrida.csv',vectorevaluaciones,delimiter=",")
+np.savetxt('Binario 2.csv',excel,delimiter=",")
