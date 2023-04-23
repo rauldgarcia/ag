@@ -11,7 +11,7 @@ neval=0
 
 '''while problema!=1 and problema!=2:
     problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))'''
-problema=2
+problema=1
 
 if problema==1:
     inf=-10
@@ -27,11 +27,11 @@ l=int(math.log2(((sup-inf)*(10**precision)))+0.9)
 #npoblacion=int(input('Ingrese el tamaño de la población:'))
 npoblacion=100
 #pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-pcruza=0.75
+pcruza=0.7
 #pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
 pmuta=0.01
 #evaluaciones=int(input('Ingrese el número de evaluaciones:'))
-generaciones=600
+generaciones=1500
 evaluaciones=npoblacion*generaciones
 
 def flip(p):
@@ -57,17 +57,17 @@ def evalua(chain):
         cadf=np.flip(cad)
         valor=0
         for ind in range(l):
-            valor=round(valor+(cadf[ind]*(2**(ind))),precision)
-        xreal=round(inf+((valor*(sup-inf))/((2**l)-1)),precision)
+            valor=valor+(cadf[ind]*(2**(ind)))
+        xreal=inf+((valor*(sup-inf))/((2**l)-1))
         
         if problema==1:
             ev=ev+(xreal**2)
 
         if problema==2:    
-            ev=round(ev+((xreal**2-(10*math.cos(2*math.pi*xreal)))),precision)
+            ev=ev+(((xreal**2)-(10*math.cos(2*math.pi*xreal))))
 
     if problema==2:
-        ev=round((10*d)+ev,precision)
+        ev=(10*d)+ev
 
     return(round(ev,precision))
 
@@ -84,10 +84,10 @@ def seleccionpadres(pob): #universal estocastica
         pob[q][2]=pob[q][1]+menor
         sumatoria+=pob[q][2]
     
-    mu=round((sumatoria/npoblacion),precision)
+    mu=(sumatoria/npoblacion)
 
     for r in range(npoblacion):
-        pob[r][3]=round(pob[r][2]/mu,precision)
+        pob[r][3]=pob[r][2]/mu
 
     padres=[] #crea matriz de largo de la poblacion
     ptr=random.random()
