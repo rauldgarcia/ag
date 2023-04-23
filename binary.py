@@ -2,6 +2,7 @@ import numpy as np
 import math
 import random
 from random import shuffle
+import copy
 
 d=10
 problema=0
@@ -11,7 +12,7 @@ neval=0
 
 '''while problema!=1 and problema!=2:
     problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))'''
-problema=1
+problema=2
 
 if problema==1:
     inf=-10
@@ -27,7 +28,7 @@ l=int(math.log2(((sup-inf)*(10**precision)))+0.9)
 #npoblacion=int(input('Ingrese el tamaño de la población:'))
 npoblacion=100
 #pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-pcruza=0.7
+pcruza=0.65
 #pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
 pmuta=0.01
 #evaluaciones=int(input('Ingrese el número de evaluaciones:'))
@@ -179,22 +180,28 @@ for individuo in range(npoblacion):
 vectorevaluaciones=np.array([[neval,best]])
 
 while neval<evaluaciones:
+    copia=copy.deepcopy(poblacion)
     padres=seleccionpadres(poblacion)
 
     hijos=cruza(padres)
 
     hijos=muta(hijos)
 
-    poblacion.sort(key=lambda x:x[2]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
+    copia.sort(key=lambda x:x[1]) #ordena la matriz de acuerdo a numero de ataques de menor a mayor
     hijos.sort(key=lambda x:x[1])
 
-    hijos[-1][0]=poblacion[-1][0]
-    hijos[-1][1]=-poblacion[-1][1]
+    #print(poblacion)
+    #print(hijos)
+
+    hijos[-1][0]=copia[0][0]
+    hijos[-1][1]=copia[0][1]
     hijos.sort(key=lambda x:x[1])
+    mejors=copy.deepcopy(hijos[0][0])
+    mejorv=copy.deepcopy(hijos[0][1])
     #print("Mejor solucion actual:")
     #print(hijos[0][0])
     print("Mejor valor actual:")
-    print(hijos[0][1])
+    print(mejorv)
 
     vectorevaluacionesac=np.array([[neval,hijos[0][1]]])
     vectorevaluaciones=np.append(vectorevaluaciones,vectorevaluacionesac,axis=0)
@@ -202,9 +209,9 @@ while neval<evaluaciones:
     poblacion=hijos
     shuffle(poblacion)
 
-#print("Mejor solucion actual:")
-#print(hijos[0][0])
+print("Mejor valor:")
+print(mejorv)
 print("La mejor solucion es:")
-print(imprime(hijos[0][0]))
+print(imprime(mejors))
 #print(vectorevaluaciones)
-np.savetxt("prueba.csv",vectorevaluaciones,delimiter=",")
+np.savetxt("1binario1.csv",vectorevaluaciones,delimiter=",")
