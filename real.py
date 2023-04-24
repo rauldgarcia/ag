@@ -58,13 +58,13 @@ def evalua(chain):
         valor=0
         
         if problema==1:
-            ev=round(ev+(chain[sub]**2),precision)
+            ev=ev+(chain[sub]**2)
 
         if problema==2:    
-            ev=round(ev+(((chain[sub]**2)-(10*math.cos(2*math.pi*chain[sub])))),precision)
+            ev=ev+(((chain[sub]**2)-(10*math.cos(2*math.pi*chain[sub]))))
 
     if problema==2:
-        ev+=round(10*d,precision)
+        ev+=10*d
 
     return(round(ev,precision))
 
@@ -178,8 +178,8 @@ while neval<evaluaciones:
     hijos[-1][0]=poblacion[0][0]
     hijos[-1][1]=poblacion[0][1]
     hijos.sort(key=lambda x:x[1])
-    #print("Mejor solucion actual:")
-    #print(hijos[0][0])
+    print("Mejor solucion actual:")
+    print(hijos[0][0])
     print("Mejor valor actual:")
     print(hijos[0][1])
     vectorevaluacionesac=np.array([[neval,hijos[0][1]]])

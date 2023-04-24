@@ -198,8 +198,8 @@ while neval<evaluaciones:
     hijos.sort(key=lambda x:x[1])
     mejors=copy.deepcopy(hijos[0][0])
     mejorv=copy.deepcopy(hijos[0][1])
-    #print("Mejor solucion actual:")
-    #print(hijos[0][0])
+    print("Mejor solucion actual:")
+    print(imprime(hijos[0][0]))
     print("Mejor valor actual:")
     print(mejorv)
 
