@@ -22,13 +22,9 @@ if problema==2:
     sup=5.12
 
 npoblacion=int(input('Ingrese el tamaño de la población:'))
-#npoblacion=100
 pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-#pcruza=0.7
 pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
-#pmuta=0.01
 generaciones=int(input('Ingrese el número de generaciones:'))
-#generaciones=1500
 evaluaciones=npoblacion*generaciones
 
 def flip(p):

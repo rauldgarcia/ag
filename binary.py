@@ -12,7 +12,6 @@ neval=0
 
 while problema!=1 and problema!=2:
     problema=int(input('Ingrese el número de problema que quiere resolver (1 o 2):'))
-#problema=1
 
 if problema==1:
     inf=-10
@@ -26,13 +25,9 @@ if problema==2:
 l=int(math.log2(((sup-inf)*(10**precision)))+0.9)
 
 npoblacion=int(input('Ingrese el tamaño de la población:'))
-#npoblacion=100
 pcruza=float(input('Ingrese la probabilidad de cruza en decimal(ejemplo=0.5):'))
-#pcruza=0.7
 pmuta=float(input('Ingrese la probabilidad de muta en decimal(ejemplo=0.5):'))
-#pmuta=0.01
 generaciones=int(input('Ingrese el número de generaciones:'))
-#generaciones=1500
 evaluaciones=npoblacion*generaciones
 
 def flip(p):
